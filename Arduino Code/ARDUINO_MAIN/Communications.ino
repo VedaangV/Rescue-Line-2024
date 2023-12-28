@@ -1,3 +1,4 @@
+@ -1,30 +0,0 @@
 #define MSG_LENGTH 50
 char msg[MSG_LENGTH];
 
@@ -7,6 +8,7 @@ void read(){
     char c = Serial2.read();
     msg[i] = c;
     i++;
+    delay(5);
   }
 }
 void write(char message[]){
