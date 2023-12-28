@@ -1,5 +1,6 @@
-@ -1,30 +0,0 @@
-#define MSG_LENGTH 50
+#include "Header.h"
+
+//Code for communicating with Raspberry
 char msg[MSG_LENGTH];
 
 void read(){
@@ -16,17 +17,4 @@ void write(char message[]){
     Serial2.write(message[i]);
     delay(5);
   }
-}
-void setup() {
-  // put your setup code here, to run once:
-  Serial2.begin(9600);
-  Serial.begin(115200);
-  write("init");
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-  read();
-  Serial.println(msg);
 }
