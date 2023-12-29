@@ -5,11 +5,12 @@ char msg[MSG_LENGTH];
 
 void read(){
   int i = 0;
+  memset(msg, 0, MSG_LENGTH);
   while (Serial2.available()) {
     char c = Serial2.read();
     msg[i] = c;
     i++;
-    delay(5);
+    delay(10);
   }
 }
 void write(char message[]){

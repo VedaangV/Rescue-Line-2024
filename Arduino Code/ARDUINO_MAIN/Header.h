@@ -40,6 +40,8 @@ extern char msg[MSG_LENGTH];
 
 //Funcs
 
+void setMultipleMotors(int left, int right);
+
 //Intersections
 
 //LineTracing
