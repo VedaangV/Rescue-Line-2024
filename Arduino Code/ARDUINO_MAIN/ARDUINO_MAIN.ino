@@ -18,11 +18,14 @@ void loop() {
     Serial.println("HOORAY");
   }
   */
-  /*setMultipleMotors(150, 150);
+  //setMultipleMotors(150, 150);
+  read();
   if(msg[0] >= '0' && msg[0] <= '9')
-  {
+  { 
+    while(true)
     setMultipleMotors(getnum(msg), getnum(&msg[3]));
   }
+  /*
   if(msg[0] == 'L')
   {
     if(msg[1] == 'S')
