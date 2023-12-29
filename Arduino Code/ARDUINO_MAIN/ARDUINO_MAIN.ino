@@ -18,6 +18,72 @@ void loop() {
     Serial.println("HOORAY");
   }
   */
-  setMultipleMotors(150, 150);
-  
+  /*setMultipleMotors(150, 150);
+  if(msg[0] >= '0' && msg[0] <= '9')
+  {
+    setMultipleMotors(getnum(msg), getnum(&msg[3]));
+  }
+  if(msg[0] == 'L')
+  {
+    if(msg[1] == 'S')
+    {
+      
+    }
+    if(msg[1] == 'G')
+    {
+
+    }
+  }
+  if(msg[0] == 'R')
+  {
+    if(msg[1] == 'S')
+    {
+
+    }
+    if(msg[1] == 'G')
+    {
+      
+    }
+  }
+  if(msg[0] == 'G')
+  {
+    if(msg[1] == 'L')
+    {
+
+    }
+    if(msg[1] == 'R')
+    {
+
+    }
+  }
+  if(msg[0] == 'F')
+  {
+    if(msg[1] == 'S')
+    {
+      
+    }
+    if(msg[1] == 'C')
+    {
+
+    }
+  }
+  if(msg[0] == 'B')
+  {
+    if(msg[1] == 'S')
+    {
+      
+    }
+    if(msg[1] == 'C')
+    {
+      
+    }
+  }
+  if(msg[0] == 'Y')
+  {
+
+  }
+  if(msg[0] == 'Z')
+  {
+
+  }*/
 }

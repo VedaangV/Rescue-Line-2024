@@ -20,6 +20,8 @@
 //Comms
 
 extern char msg[MSG_LENGTH];
+
+int getnum(char *p);
 //Evac
 
 //Funcs

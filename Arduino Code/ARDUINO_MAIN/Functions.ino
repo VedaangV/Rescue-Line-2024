@@ -73,3 +73,15 @@ right *= -1;
   }
 
 }
+
+int getnum(char *p)
+{
+  int sum = 0;
+  for(int i = 0; i < 3; i++)
+  {
+    sum * 10;
+    sum += (p - '0');
+    p++;
+  }
+  return sum;
+}
