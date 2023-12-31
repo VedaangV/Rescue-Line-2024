@@ -6,6 +6,7 @@
 //Libraries---------------------------:
 
 #include <string.h>
+#include <Wire.h>
 
 //--------------------------
 
@@ -21,10 +22,12 @@
 
 extern char msg[MSG_LENGTH];
 
-int getnum(char *p);
+
 //Evac
 
 //Funcs
+
+extern volatile int enc;
 
 //Intersections
 
@@ -41,9 +44,15 @@ int getnum(char *p);
 //Evac
 
 //Funcs
-
+void Interruptfunc();
 void setMultipleMotors(int left, int right);
-
+int getnum(char *p);
+float cm_to_encoders(float cm);
+void Interruptfunc();
+void forward_enc(int encoders, int motor_speed);
+void backward_enc(int encoders, int motor_speed);
+void backwardCm(float dist, int motor_speed);
+void forwardCm(float dist, int motor_speed);
 //Intersections
 
 //LineTracing

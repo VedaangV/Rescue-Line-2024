@@ -3,13 +3,11 @@
 
 //GREENNNNNNNNN
 //General purpose functions for the entire program
-
+volatile int enc = 0;
 void setMultipleMotors(int left, int right) { //set motors
 //int buff = right;
 //right = left;
 //left = buff;
-left *= -1;
-right *= -1;
   int boost = 0;//in case motors are slow
   //port 1
   left = left > 255 ? 255 : left;
@@ -17,9 +15,7 @@ right *= -1;
   
   if (left > 0)
   {
-    #ifdef main_bot
-    left += boost;
-    #endif
+
     digitalWrite(35, LOW);
     delayMicroseconds(5);
     digitalWrite(34, HIGH);
@@ -74,14 +70,50 @@ right *= -1;
 
 }
 
+float cm_to_encoders(float cm) {
+  const float wheelDiameter = 6.42;
+  return cm / (wheelDiameter * PI) * 360;
+}
+
+void Interruptfunc() {//interrupt func for encoders
+  if (digitalRead(31) == HIGH) {
+    enc++;
+  }
+  else {
+    enc--;
+  }
+}
+
+void forward_enc(int encoders, int motor_speed) {//go forward for enc
+  int previousEnc = enc;
+  while (enc <=  previousEnc + encoders) {
+    setMultipleMotors(motor_speed, motor_speed);
+    Serial.println(enc);
+  }
+  setMultipleMotors(0, 0);
+}
+void backward_enc(int encoders, int motor_speed) {//go backward for enc
+  int previousEnc = enc;
+
+  while (enc >=  previousEnc - encoders) {
+    setMultipleMotors(-motor_speed, -motor_speed);
+  }
+  setMultipleMotors(0, 0);
+}
+void backwardCm(float dist, int motor_speed) { //go backward for cm
+  backward_enc(cm_to_encoders(dist), motor_speed);
+}
+void forwardCm(float dist, int motor_speed) {//go forward for cm
+  forward_enc(cm_to_encoders(dist), motor_speed);
+}
+
 int getnum(char *p)
 {
   int sum = 0;
   for(int i = 0; i < 3; i++)
   {
-    sum * 10;
-    sum += (p - '0');
-    p++;
+    sum *= 10;
+    sum += (*(p+i) - '0');
   }
   return sum;
 }
