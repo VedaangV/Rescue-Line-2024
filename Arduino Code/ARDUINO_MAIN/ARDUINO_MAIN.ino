@@ -15,8 +15,9 @@ void loop() {
   // put yur main code here, to run repeatedly:
 
   read();
-  if (msg[0] >= '0' && msg[0] <= '9') {
-    setMultipleMotors(getnum(msg), getnum(&msg[3]));
+  if (msg[0] == '+' || msg[0] == '-') {
+    int sign1 = 1 - (2 * (msg[0] == '-')), sign2 = 1 - (2 * (msg[4] == '-'));
+    setMultipleMotors(getnum(&msg[1]) * sign1, getnum(&msg[5]) * sign2);
   }
   if (msg[0] == 'F' && msg[1] == 'S') {    //going forward (or backward)
     int sign = 1 - (2 * (msg[2] == '-'));  //sets sign to 1 or -1
