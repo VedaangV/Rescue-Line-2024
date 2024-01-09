@@ -40,7 +40,7 @@ extern volatile int enc;
 //Functions from all files-----------------------------:
 
 //Comms
-
+void read();
 //Evac
 
 //Funcs

@@ -1,8 +1,7 @@
 #include "Header.h"
 
-//Main code
-
 void setup() {
+  // put your setup code here, to run once:
   // put your setup code here, to run once:
   Serial2.begin(9600);
   Serial.begin(115200);
@@ -12,7 +11,7 @@ void setup() {
 }
 
 void loop() {
-  // put yur main code here, to run repeatedly:
+  // put your main code here, to run repeatedly:
 
   read();
   if (msg[0] == '+' || msg[0] == '-') {
@@ -31,3 +30,4 @@ void loop() {
     backwardCm(getnum(&msg[2]), 120);
   }
 }
+

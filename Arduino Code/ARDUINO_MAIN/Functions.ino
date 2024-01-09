@@ -1,3 +1,4 @@
+
 #include "Header.h"
 
 
@@ -97,6 +98,8 @@ void backward_enc(int encoders, int motor_speed) {//go backward for enc
 
   while (enc >=  previousEnc - encoders) {
     setMultipleMotors(-motor_speed, -motor_speed);
+        Serial.println(enc);
+
   }
   setMultipleMotors(0, 0);
 }
