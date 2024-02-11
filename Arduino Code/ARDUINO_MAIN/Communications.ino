@@ -4,8 +4,10 @@ char msg[MSG_LENGTH];
 
 void read(){
   int i = 0;
+  char c = 100;
+  while(!Serial2.available());
   while (Serial2.available()) {
-    char c = Serial2.read();
+    c = Serial2.read();
     msg[i] = c;
     i++;
     delay(5);

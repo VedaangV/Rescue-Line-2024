@@ -14,6 +14,8 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   read();
+  write("!");
+  Serial.println(msg);
   if (msg[0] == '+' || msg[0] == '-') {
     int sign1 = 1 - (2 * (msg[0] == '-')), sign2 = 1 - (2 * (msg[4] == '-'));
     setMultipleMotors(getnum(&msg[1]) * sign1, getnum(&msg[5]) * sign2);
