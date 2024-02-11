@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <Wire.h>
+#include <Adafruit_BNO055.h>
 
 //--------------------------
 
@@ -53,6 +54,12 @@ void forward_enc(int encoders, int motor_speed);
 void backward_enc(int encoders, int motor_speed);
 void backwardCm(float dist, int motor_speed);
 void forwardCm(float dist, int motor_speed);
+void enc_turn(int deg, int speed);
+float getYaw();
+float getPitch();
+void bnoSetup();
+void enc_turn_abs(int deg, int speed);
+
 //Intersections
 
 //LineTracing

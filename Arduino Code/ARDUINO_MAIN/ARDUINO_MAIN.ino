@@ -8,6 +8,7 @@ void setup() {
   Wire.begin();
   attachInterrupt(digitalPinToInterrupt(18), Interruptfunc, RISING);
   //write("init");
+  bnoSetup();
 }
 
 void loop() {
