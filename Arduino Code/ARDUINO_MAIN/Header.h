@@ -35,6 +35,9 @@ extern volatile int enc;
 //LineTracing
 
 //Obstacle
+extern int trig;
+extern int echo;
+
 
 //-------------------------
 
@@ -59,13 +62,16 @@ float getYaw();
 float getPitch();
 void bnoSetup();
 void enc_turn_abs(int deg, int speed);
-
+void motorSetup();
 //Intersections
 
 //LineTracing
 
 //Obstacle
-
+void distanceISR();
+float getFrontDistance();
+bool seeObs (long dist);
+void forward_until_obs(int dist);
 //---------------------------------
 
 //----------------------------------------------------------------------------------------
