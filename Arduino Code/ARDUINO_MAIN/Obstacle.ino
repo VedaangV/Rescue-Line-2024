@@ -55,3 +55,72 @@ bool seeObs(long dist) { //sees obstacle?
     return false;
   }
 }
+void avoid(int sign) { //move around obstacle
+  bool flag = false;
+  forwardCm(15.0, 100);
+  enc_turn(-90 * sign, 100);
+  forwardCm(40.0, 70);
+  enc_turn(-90 * sign, 100);
+  int enc1 = enc;
+  while (leftBlack() == 0 && rightBlack() == 0) { //forward until black line
+    if (enc - enc1 >= cm_to_encoders(9.0) && !flag) { //if traveled more than or 22cm (lost the line)
+      enc_turn(-90 * sign, 100);//turn again to find the line
+      flag = true;//ensures that it only does this pnce
+    }
+    setMultipleMotors(70, 70);
+    qtr.read(bw_vals);
+  }
+  forwardCm(15.0, 70);
+  enc_turn(90 * sign, 100);
+}
+/*void avoid(int sign){
+  float botLength = 15.5;
+  float proportion = 5.0;
+  float baseSpeed = 30.0;
+  float obs_width = 10.0;//assumed width of obstacle for testing
+  float bot_dist = 5.0;//the distance between the bot and obstacle before turning (measured)
+  float circum = (((obs_width + (2 * bot_dist)) * PI)/2) - botLength/2;//calculation of the circumference of the circular path bot must take
+  float previous_enc = enc;
+  int inner_sensor;
+  while(enc- previous_enc < 0.2 * (cm_to_encoders(circum))){//until completed at least 20% of the turn
+    setMultipleMotors(baseSpeed + (baseSpeed * (proportion-1) * (sign < 0)), ((baseSpeed*proportion) -  (baseSpeed * (proportion-1) * (sign < 0))));//circular turn, speeds: (base_speed * proportion), base_speed
+  }
+  qtr.read(bw_vals);
+  if(sign == 1){
+    inner_sensor = leftSensor;
+  }
+  else{
+    inner_sensor = rightSensor;
+  }
+  while(bw_vals[inner_sensor] < BLACK_THRESH && enc- previous_enc < (cm_to_encoders(circum))){//keep turning until black line
+    qtr.read(bw_vals);
+  }
+  forwardCm(5.0, 80);
+  
+  qtr.read(bw_vals);
+  while((leftBlack() == 0 && rightBlack() == 0)){//turn back onto line
+    qtr.read(bw_vals);
+    setMultipleMotors(100 * sign, -100*sign);
+  }
+
+ //turning back straight gradually
+ 
+  forwardCm(0.7, 80);
+  enc_turn(7.5 * sign, 120);
+  forwardCm(0.7, 80);
+  enc_turn(7.5 * sign, 120);
+   
+}*/
+void obstacle() { //main obstacle function
+  if (seeObs(5.0)) {
+    enc_turn(90, 100);
+    if (seeObs(10.0)) { //sees wall      
+      enc_turn(180, 100);
+     avoid(-1);
+    }
+    else {
+      avoid(1);
+    }
+  }
+  setMultipleMotors(0, 0);
+}

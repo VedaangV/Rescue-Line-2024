@@ -2,7 +2,7 @@
 //General purpose functions for the entire program
 volatile int enc = 0;
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+Adafruit_BNO055 bno = Adafruit_BNO055(55);
 float yaw = 0;
 const int m1_forward = -75;
 const int m2_forward = 75;
@@ -30,8 +30,9 @@ float getPitch()//get tilt (pitch) of BNO
 
 void enc_turn(int deg, int speed)//turns a specific amount of degrees
 {
-
-
+  bool neg = false;
+ if(deg < 0)
+  neg = true;
  int target = 0;
  setMultipleMotors(0, 0);
  yaw = getYaw();
@@ -70,6 +71,17 @@ void enc_turn(int deg, int speed)//turns a specific amount of degrees
 
 
  setMultipleMotors(0,0);
+
+ if(deg<0)
+ {
+   setMultipleMotors(90, -90);
+   delay(50);
+ }
+ else
+ {
+   setMultipleMotors(-90, 90);
+   delay(50);
+ }
 }
 
 
@@ -114,7 +126,7 @@ void enc_turn_abs(int deg, int speed)  //turns a certain amount of degrees, roun
  Serial.println(-calc_speed);
 
 
- while ((yaw > target + 2) || (yaw < target - 2)) {
+ while ((yaw > target + 6) || (yaw < target - 6)) {
    //Serial.println(yaw);
    setMultipleMotors(-calc_speed, calc_speed);
    yaw = getYaw();
@@ -147,7 +159,7 @@ void enc_turn_abs(int deg, int speed)  //turns a certain amount of degrees, roun
 void bnoSetup()
 {
  int x;
- if (!(x = bno.begin()))
+ if (!(x = bno.begin(OPERATION_MODE_IMUPLUS)))
  {
    /* There was a problem detecting the BNO055 ... check your connections */
    Serial.println("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");

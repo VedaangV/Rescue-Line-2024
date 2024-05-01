@@ -8,6 +8,7 @@
 #include <string.h>
 #include <Wire.h>
 #include <Adafruit_BNO055.h>
+#include <QTRSensors.h>//for qtr
 
 //--------------------------
 
@@ -18,6 +19,12 @@
 //---------------------
 
 //Variables from all files---------------------------------:
+#define BLACK_THRESH 800
+#define WHITE_THRESH 500
+
+
+#define rightBlack() ((bw_vals[7] > BLACK_THRESH) && (bw_vals[6] > BLACK_THRESH) && (bw_vals[5] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH))
+#define leftBlack() ((bw_vals[0] > BLACK_THRESH) && (bw_vals[1] > BLACK_THRESH) && (bw_vals[2] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH))
 
 //Comms
 
@@ -33,7 +40,10 @@ extern volatile int enc;
 //Intersections
 
 //LineTracing
-
+extern int bw_vals[];
+extern int leftSensor;
+extern int rightSensor;
+extern QTRSensors qtr;
 //Obstacle
 extern int trig;
 extern int echo;
@@ -66,7 +76,13 @@ void motorSetup();
 //Intersections
 
 //LineTracing
-
+void setup_qtr();
+float qtr_average(int start, int finish);
+float error_calc();
+void qtr_print();
+void pid_print();
+void diff_print();
+void lineTrace();
 //Obstacle
 void distanceISR();
 float getFrontDistance();
