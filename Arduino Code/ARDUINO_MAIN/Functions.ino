@@ -21,12 +21,12 @@ float getYaw()//get rotation of BNO
 
 
 }
+
 float getPitch()//get tilt (pitch) of BNO
 {
- bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
- return orientationData.orientation.y;
+  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+  return orientationData.orientation.y;
 }
-
 
 void enc_turn(int deg, int speed)//turns a specific amount of degrees
 {

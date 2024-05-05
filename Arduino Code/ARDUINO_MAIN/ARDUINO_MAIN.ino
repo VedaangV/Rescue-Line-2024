@@ -1,11 +1,14 @@
 #include <Adafruit_BNO055.h>
 #include "Adafruit_APDS9960.h"
 #include "Header.h"
+#include <Servo.h>
 Adafruit_APDS9960 color;
 int x = 0;
 void setup() {
   // put your setup code here, to run once:
   // put your setup code here, to run once:
+  diff_print();
+  
   Serial2.begin(9600);
   Serial.begin(115200);
   Wire.begin();
@@ -59,10 +62,10 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    forwardCm(2.5, 60);
-    enc_turn_abs(90, 75);
+    forwardCm(4, 60);
+    enc_turn(90, 75);
     //enc_turn_abs(90, 100);
-    backwardCm(4, 60);
+    backwardCm(2, 60);
     setMultipleMotors(0, 0);
     delay(3000);
 
@@ -72,11 +75,11 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    //forwardCm(5, 60);
-    enc_turn_abs(-90, 75);
+    forwardCm(4, 60);
+    enc_turn(-90, 75);
     //enc_turn_abs(-90, 100);
     setMultipleMotors(0, 0);
-    backwardCm(4, 60);
+    backwardCm(2, 60);
     delay(3000);
     read();
 
@@ -87,7 +90,7 @@ void loop() {
     setMultipleMotors(0, 0);
     delay(1000);
     //forwardCm(5, 60);
-    enc_turn_abs(180, 75);
+    enc_turn(180, 75);
     //enc_turn_abs(180, 100);
     setMultipleMotors(0, 0);
     backwardCm(4, 60);

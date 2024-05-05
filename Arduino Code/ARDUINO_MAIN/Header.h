@@ -19,8 +19,8 @@
 //---------------------
 
 //Variables from all files---------------------------------:
-#define BLACK_THRESH 800
-#define WHITE_THRESH 500
+#define BLACK_THRESH 700
+#define WHITE_THRESH 1400
 
 
 #define rightBlack() ((bw_vals[7] > BLACK_THRESH) && (bw_vals[6] > BLACK_THRESH) && (bw_vals[5] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH))
