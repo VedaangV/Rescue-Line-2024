@@ -4,32 +4,28 @@ volatile long pulseMsEd = 0;
 volatile bool pulseFirst = 1;
 int trig = 4;
 int echo = 5;
-void distanceISR()
-{
+void distanceISR() {
 
-  if (pulseFirst)
-  {
+  if (pulseFirst) {
     pulseMsSt = micros();
     pulseFirst = 0;
-  }
-  else
-  {
+  } else {
     pulseMsEd = micros();
     pulseFirst = 1;
   }
 }
 
-void forward_until_obs(int dist){
+void forward_until_obs(int dist) {
   Serial.println("FOBS STARTED");
   Serial.println(dist);
-  while((int)getFrontDistance() > dist){
+  while ((int)getFrontDistance() > dist) {
     setMultipleMotors(60, 60);
   }
   setMultipleMotors(0, 0);
 }
 
 
-float getFrontDistance()//get distance of Front US
+float getFrontDistance()  //get distance of Front US
 {
 
   digitalWrite(trig, LOW);
@@ -40,32 +36,30 @@ float getFrontDistance()//get distance of Front US
   long pulseTime = pulseIn(echo, HIGH);
   float distance;
   distance = pulseTime * 0.034 / 2;
-  if (distance < 0)
-  {
+  if (distance < 0) {
     distance = 0;
   }
   return (distance);
 }
 
-bool seeObs(long dist) { //sees obstacle?
+bool seeObs(long dist) {  //sees obstacle?
   if (getFrontDistance() <= dist) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
-void avoid(int sign) { //move around obstacle
+void avoid(int sign) {  //move around obstacle
   bool flag = false;
   forwardCm(15.0, 100);
   enc_turn(-90 * sign, 100);
   forwardCm(40.0, 70);
   enc_turn(-90 * sign, 100);
   int enc1 = enc;
-  while (leftBlack() == 0 && rightBlack() == 0) { //forward until black line
-    if (enc - enc1 >= cm_to_encoders(9.0) && !flag) { //if traveled more than or 22cm (lost the line)
-      enc_turn(-90 * sign, 100);//turn again to find the line
-      flag = true;//ensures that it only does this pnce
+  while (leftBlack() == 0 && rightBlack() == 0) {      //forward until black line
+    if (enc - enc1 >= cm_to_encoders(9.0) && !flag) {  //if traveled more than or 22cm (lost the line)
+      enc_turn(-90 * sign, 100);                       //turn again to find the line
+      flag = true;                                     //ensures that it only does this pnce
     }
     setMultipleMotors(70, 70);
     qtr.read(bw_vals);
@@ -111,16 +105,33 @@ void avoid(int sign) { //move around obstacle
   enc_turn(7.5 * sign, 120);
    
 }*/
-void obstacle() { //main obstacle function
-  if (seeObs(5.0)) {
-    enc_turn(90, 100);
-    if (seeObs(10.0)) { //sees wall      
-      enc_turn(180, 100);
-     avoid(-1);
-    }
-    else {
-      avoid(1);
-    }
+
+float getDistance() {
+  int16_t t = pulseIn(2, HIGH);
+  if (t == 0) {
+    // pulseIn() did not detect the start of a pulse within 1 second.
+    //Serial.println("timeout");
+  } else if (t > 1850) {
+    // No detection.
+    //Serial.println(-1);
+  } else {
+    // Valid pulse width reading. Convert pulse width in microseconds to distance in centimeters.
+    float d = (t - 1000) * 33.0 / 160.0;
+
+    // Limit minimum distance to 0.
+    if (d < 0) { d = 0; }
+    return d;
   }
-  setMultipleMotors(0, 0);
 }
+  void obstacle() {  //main obstacle function
+    if (seeObs(5.0)) {
+      enc_turn(90, 100);
+      if (seeObs(10.0)) {  //sees wall
+        enc_turn(180, 100);
+        avoid(-1);
+      } else {
+        avoid(1);
+      }
+    }
+    setMultipleMotors(0, 0);
+  }

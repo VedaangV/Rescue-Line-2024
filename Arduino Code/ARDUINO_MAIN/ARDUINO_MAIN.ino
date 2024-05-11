@@ -4,6 +4,9 @@
 #include <Servo.h>
 Adafruit_APDS9960 color;
 int x = 0;
+Servo arm;
+Servo cam;
+bool armDown = 0;
 void setup() {
   // put your setup code here, to run once:
   // put your setup code here, to run once:
@@ -23,21 +26,29 @@ void setup() {
     for(;;);
   }
   color.enableColor(true);
+  arm.attach(A6);
+  cam.attach(A9);
   Serial.println("Cleared setup");
+arm.write(45);
+delay(100);
+cam.write(90);
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
+  if(getRoll() > 15 || getRoll() < -15){
+    seesaw();
+  }
   read();
   uint16_t r, g, b, c;
   color.getColorData(&r, &g, &b, &c);
-  if(c > 500){//sees silver
+  if(c > 650){//sees silver
     setMultipleMotors(0, 0);
     while(1){}
     }
   if (x % 10 == 0) {
-    obstacle();
+    //obstacle();
   }
   Serial.println(msg);
   //Serial.println("hi");
@@ -62,12 +73,13 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    forwardCm(4, 60);
-    enc_turn(90, 75);
+    forwardCm(6.5, 70);
+    enc_turn(90, 110);
     //enc_turn_abs(90, 100);
-    backwardCm(2, 60);
+    backwardCm(2.5, 60);
     setMultipleMotors(0, 0);
     delay(3000);
+    read();
 
   } else if (msg[0] == 'L' && msg[1] == 'G') {
     while (!(leftBlack() || rightBlack())) {
@@ -75,11 +87,11 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    forwardCm(4, 60);
-    enc_turn(-90, 75);
+    forwardCm(4, 70);
+    enc_turn(-90, 110);
     //enc_turn_abs(-90, 100);
     setMultipleMotors(0, 0);
-    backwardCm(2, 60);
+    backwardCm(1, 60);
     delay(3000);
     read();
 
@@ -90,7 +102,7 @@ void loop() {
     setMultipleMotors(0, 0);
     delay(1000);
     //forwardCm(5, 60);
-    enc_turn(180, 75);
+    enc_turn(180, 90);
     //enc_turn_abs(180, 100);
     setMultipleMotors(0, 0);
     backwardCm(4, 60);
@@ -103,9 +115,43 @@ void loop() {
     enc_turn(-90, 75);
     setMultipleMotors(0, 0);
     delay(3000);
-  } else if (msg[0] == 'F' && msg[1] == 'O' && msg[2] == 'B' && msg[3] == 'S') {
-    forward_until_obs(5);
-    Serial.println("FOBS DONE");
+  } else if (msg[0] == 'a'){
+    setMultipleMotors(70, -70);
+    delay(50);
+    setMultipleMotors(0, 0);
+    delay(50);
+  }else if (msg[0] == 'b'){
+    setMultipleMotors(-70, 70);
+    delay(50);
+    setMultipleMotors(0, 0);
+    delay(50);
+  }
+  else if (msg[0] == 'V') {
+    setMultipleMotors(0,0);
+    if(getDistance() < 7.0){
+      delay(1000);
+      if(getDistance() < 7.0){
+        forwardCm(3.7, 80);
+        delay(1000);
+        enc_turn(180, 100);
+        setMultipleMotors(0, 0);
+        delay(500);
+        arm.write(90);
+        delay(1000);
+        arm.write(45);
+        delay(1000);
+        arm.write(90);
+        delay(1000);
+        arm.write(45);
+        delay(1000);
+        write("u");
+        read();
+      }
+    }
+    else{
+      forwardCm(1.5, 80);
+      read();
+    }
   }
 
 
@@ -119,4 +165,5 @@ void loop() {
   //enc_turn_abs(-90, 90);
   //
   x++;
+
 }

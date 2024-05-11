@@ -19,8 +19,8 @@
 //---------------------
 
 //Variables from all files---------------------------------:
-#define BLACK_THRESH 700
-#define WHITE_THRESH 1400
+#define BLACK_THRESH 1150
+#define WHITE_THRESH 700
 
 
 #define rightBlack() ((bw_vals[7] > BLACK_THRESH) && (bw_vals[6] > BLACK_THRESH) && (bw_vals[5] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH))
@@ -70,9 +70,12 @@ void forwardCm(float dist, int motor_speed);
 void enc_turn(int deg, int speed);
 float getYaw();
 float getPitch();
+float getRoll();
 void bnoSetup();
 void enc_turn_abs(int deg, int speed);
 void motorSetup();
+float getDistance();
+void seesaw();
 //Intersections
 
 //LineTracing

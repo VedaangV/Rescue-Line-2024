@@ -9,8 +9,8 @@ float last_error = 0.0;
 int count = 0;
 int leftSensor = 0;
 int rightSensor = 7;
-const float kp = 0.035;     //error multiplier
-const float ki = 0.000000;  //integral multiplier
+const float kp = 0.038;     //error multiplier
+const float ki = 0.00001;  //integral multiplier
 const float kd = 0.01;      //kd multiplier
 
 
@@ -47,8 +47,8 @@ float error_calc() {
 
   //desired difference between sensor pairs (ideally 0, but sensors are not perfect):
 
-  float target_vals[] = {264, 0, -160, 0};  //5/20-storming. 8/*FINAL ROBOT*/
-  float multipliers[] = { 1.7, 1.5, 1.3, 1.0};
+  float target_vals[] = {164, 0, -112, 0};  //5/20-storming. 8/*FINAL ROBOT*/
+  float multipliers[] = { 2.1, 1.7, 1.5, 1.0};
 
   float error = 0.0;  //error in PID
   qtr.read(bw_vals);
@@ -93,8 +93,8 @@ void diff_print() {  //print the diff between sensor pairs.
 /*This handles all black intersection cases*/
 
 void lineTrace(bool tCase) {  //main line tracking function
+  int base_speed = 50;
 
-  int base_speed = 50+getPitch();  //base speed for Line Tracing
   // gap();
   float error = error_calc();                                              //calculating error
   integral += error;                                                       //summing up all erors during runtime

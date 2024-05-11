@@ -27,7 +27,11 @@ float getPitch()//get tilt (pitch) of BNO
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
   return orientationData.orientation.y;
 }
-
+float getRoll()//get tilt (pitch) of BNO
+{
+  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+  return orientationData.orientation.z;
+}
 void enc_turn(int deg, int speed)//turns a specific amount of degrees
 {
   bool neg = false;
@@ -287,7 +291,18 @@ void forwardCm(float dist, int motor_speed) {//go forward for cm
  forward_enc(cm_to_encoders(dist), motor_speed);
 }
 
-
+void seesaw(){
+  arm.write(90);
+  while(getRoll() > 5){
+    setMultipleMotors(100, 100);
+  }
+  setMultipleMotors(0, 0);
+  delay(1000);
+  while(getRoll() < -5){
+    setMultipleMotors(30, 30);
+  }
+  arm.write(45);
+}
 int getnum(char *p)
 {
  int sum = 0;
