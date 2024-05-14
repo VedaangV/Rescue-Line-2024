@@ -9,9 +9,12 @@ float last_error = 0.0;
 int count = 0;
 int leftSensor = 0;
 int rightSensor = 7;
-const float kp = 0.038;     //error multiplier
+/*const float kp = 0.038;     //error multiplier
 const float ki = 0.00001;  //integral multiplier
-const float kd = 0.01;      //kd multiplier
+const float kd = 0.01;      //kd multiplier*/
+const float kp = 0.015;
+const float ki = 0.0;
+const float kd = 0.0;
 
 
 
@@ -48,7 +51,7 @@ float error_calc() {
   //desired difference between sensor pairs (ideally 0, but sensors are not perfect):
 
   float target_vals[] = {164, 0, -112, 0};  //5/20-storming. 8/*FINAL ROBOT*/
-  float multipliers[] = { 2.1, 1.7, 1.5, 1.0};
+  float multipliers[] = { 2.3, 2.0, 1.5, 1.0};
 
   float error = 0.0;  //error in PID
   qtr.read(bw_vals);
@@ -93,8 +96,7 @@ void diff_print() {  //print the diff between sensor pairs.
 /*This handles all black intersection cases*/
 
 void lineTrace(bool tCase) {  //main line tracking function
-  int base_speed = 50;
-
+  int base_speed = 30;
   // gap();
   float error = error_calc();                                              //calculating error
   integral += error;                                                       //summing up all erors during runtime
@@ -106,7 +108,7 @@ void lineTrace(bool tCase) {  //main line tracking function
 
 
   if (tCase && (leftBlack() || rightBlack()) && msg[1] == '1') { //if tCase enabled, see black on either left or right, and line ahead
-        forwardCm(3, 80);
+        forwardCm(3, 50);
   }
   else{
     setMultipleMotors(leftSpeed, rightSpeed);

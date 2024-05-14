@@ -7,48 +7,55 @@ int x = 0;
 Servo arm;
 Servo cam;
 bool armDown = 0;
+bool evac = false;
 void setup() {
   // put your setup code here, to run once:
   // put your setup code here, to run once:
-  diff_print();
-  
+
   Serial2.begin(9600);
   Serial.begin(115200);
   Wire.begin();
+  tofSetup();
   attachInterrupt(digitalPinToInterrupt(18), Interruptfunc, RISING);
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
   setup_qtr();
   //write("init");
   bnoSetup();
-   if(!color.begin()){
+  if (!color.begin()) {
     Serial.println("color failed");
-    for(;;);
+    for (;;)
+      ;
   }
   color.enableColor(true);
   arm.attach(A6);
   cam.attach(A9);
   Serial.println("Cleared setup");
-arm.write(45);
-delay(100);
-cam.write(90);
+  arm.write(45);
+  delay(100);
+  cam.write(120);
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(getRoll() > 15 || getRoll() < -15){
-    seesaw();
+  if (getRoll() > 15) {
+    seesawUp();
   }
+  if (getRoll() < -15) {
+    seesawDown();
+  }
+  arm.write(45);
+
   read();
   uint16_t r, g, b, c;
   color.getColorData(&r, &g, &b, &c);
-  if(c > 650){//sees silver
+  if (c > 650) {  //sees silver
     setMultipleMotors(0, 0);
-    while(1){}
-    }
+    while (1) {}
+  }
   if (x % 10 == 0) {
-    //obstacle();
+    obstacle();
   }
   Serial.println(msg);
   //Serial.println("hi");
@@ -61,11 +68,11 @@ void loop() {
     setMultipleMotors(getnum(&msg[3]) * sign, getnum(&msg[3]) * sign);
     Serial.println(getnum(&msg[3]));
   }
-  if (msg[0] == 'F' && msg[1] == 'G') {  //going forward with cm
-    forwardCm(15, 80);
+  if (msg[0] == 'F' && msg[1] == 'C') {  //going forward with cm
+    forwardCm(getnum(&msg[2]), 60);
   }
   if (msg[0] == 'B' && msg[1] == 'C') {  //going backward with cm
-    backwardCm(getnum(&msg[2]), 120);
+    backwardCm(getnum(&msg[2]), 60);
   }
   if (msg[0] == 'R' && msg[1] == 'G') {
     while (!(leftBlack() || rightBlack())) {
@@ -73,8 +80,8 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    forwardCm(6.5, 70);
-    enc_turn(90, 110);
+    forwardCm(6.5, 50);
+    enc_turn(90, 70);
     //enc_turn_abs(90, 100);
     backwardCm(2.5, 60);
     setMultipleMotors(0, 0);
@@ -87,8 +94,8 @@ void loop() {
     }
     setMultipleMotors(0, 0);
     delay(1000);
-    forwardCm(4, 70);
-    enc_turn(-90, 110);
+    forwardCm(4, 60);
+    enc_turn(-90, 70);
     //enc_turn_abs(-90, 100);
     setMultipleMotors(0, 0);
     backwardCm(1, 60);
@@ -102,7 +109,7 @@ void loop() {
     setMultipleMotors(0, 0);
     delay(1000);
     //forwardCm(5, 60);
-    enc_turn(180, 90);
+    enc_turn(180, 70);
     //enc_turn_abs(180, 100);
     setMultipleMotors(0, 0);
     backwardCm(4, 60);
@@ -115,44 +122,27 @@ void loop() {
     enc_turn(-90, 75);
     setMultipleMotors(0, 0);
     delay(3000);
-  } else if (msg[0] == 'a'){
-    setMultipleMotors(70, -70);
-    delay(50);
+  } else if (msg[0] == 'a') {
+    setMultipleMotors(50, -50);
+    delay(40);
     setMultipleMotors(0, 0);
-    delay(50);
-  }else if (msg[0] == 'b'){
-    setMultipleMotors(-70, 70);
-    delay(50);
+    delay(40);
+  } else if (msg[0] == 'b') {
+    setMultipleMotors(-50, 50);
+    delay(40);
     setMultipleMotors(0, 0);
-    delay(50);
-  }
-  else if (msg[0] == 'V') {
-    setMultipleMotors(0,0);
-    if(getDistance() < 7.0){
-      delay(1000);
-      if(getDistance() < 7.0){
-        forwardCm(3.7, 80);
-        delay(1000);
-        enc_turn(180, 100);
-        setMultipleMotors(0, 0);
-        delay(500);
-        arm.write(90);
-        delay(1000);
-        arm.write(45);
-        delay(1000);
-        arm.write(90);
-        delay(1000);
-        arm.write(45);
-        delay(1000);
-        write("u");
-        read();
-      }
+    delay(40);
+  } else if (msg[0] == 'V') {
+    while (getFrontDistance() > 8.0) {
+      setMultipleMotors(50, 50);
     }
-    else{
-      forwardCm(1.5, 80);
-      read();
-    }
+    collectVictim();
+    write("u");
+  } else if (msg[0] == 'p') {
+    deliverVictim();
+    write("i");
   }
+
 
 
   //enc_turn_abs(90, 75);
@@ -165,5 +155,6 @@ void loop() {
   //enc_turn_abs(-90, 90);
   //
   x++;
-
+  
+  
 }

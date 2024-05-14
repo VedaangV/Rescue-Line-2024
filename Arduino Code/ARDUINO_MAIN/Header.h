@@ -22,7 +22,7 @@
 #define BLACK_THRESH 1150
 #define WHITE_THRESH 700
 
-
+#define numOfBlack() ((bw_vals[0] > BLACK_THRESH) + (bw_vals[1] > BLACK_THRESH) + (bw_vals[2] > BLACK_THRESH) + (bw_vals[3] > BLACK_THRESH) + (bw_vals[4] > BLACK_THRESH) + (bw_vals[5] > BLACK_THRESH) + (bw_vals[6] > BLACK_THRESH) + (bw_vals[7] > BLACK_THRESH))
 #define rightBlack() ((bw_vals[7] > BLACK_THRESH) && (bw_vals[6] > BLACK_THRESH) && (bw_vals[5] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH))
 #define leftBlack() ((bw_vals[0] > BLACK_THRESH) && (bw_vals[1] > BLACK_THRESH) && (bw_vals[2] > BLACK_THRESH) && (bw_vals[3] > BLACK_THRESH) && (bw_vals[4] > BLACK_THRESH))
 
@@ -55,6 +55,7 @@ extern int echo;
 
 //Comms
 void read();
+void write(char message[]);
 //Evac
 
 //Funcs
@@ -75,7 +76,13 @@ void bnoSetup();
 void enc_turn_abs(int deg, int speed);
 void motorSetup();
 float getDistance();
+float getBackDistance();
 void seesaw();
+void seesawUp();
+void seesawDown();
+void collectVictim();
+void deliverVictim();
+void func();
 //Intersections
 
 //LineTracing
@@ -85,12 +92,13 @@ float error_calc();
 void qtr_print();
 void pid_print();
 void diff_print();
-void lineTrace();
+void lineTrace(bool tCase);
 //Obstacle
 void distanceISR();
 float getFrontDistance();
 bool seeObs (long dist);
 void forward_until_obs(int dist);
+float tofSetup();
 //---------------------------------
 
 //----------------------------------------------------------------------------------------

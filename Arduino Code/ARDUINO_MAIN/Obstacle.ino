@@ -1,4 +1,6 @@
 #include "Header.h"
+#include "Adafruit_VL53L0X.h"
+Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 volatile long pulseMsSt = 0;
 volatile long pulseMsEd = 0;
 volatile bool pulseFirst = 1;
@@ -51,21 +53,22 @@ bool seeObs(long dist) {  //sees obstacle?
 }
 void avoid(int sign) {  //move around obstacle
   bool flag = false;
-  forwardCm(15.0, 100);
-  enc_turn(-90 * sign, 100);
-  forwardCm(40.0, 70);
-  enc_turn(-90 * sign, 100);
+  forwardCm(15.0, 50);
+  enc_turn(-90 * sign, 60);
+  forwardCm(30.0, 50);
+  enc_turn(-90 * sign, 60);
   int enc1 = enc;
-  while (leftBlack() == 0 && rightBlack() == 0) {      //forward until black line
-    if (enc - enc1 >= cm_to_encoders(9.0) && !flag) {  //if traveled more than or 22cm (lost the line)
-      enc_turn(-90 * sign, 100);                       //turn again to find the line
+  qtr.read(bw_vals);
+  while (numOfBlack() < 2) {      //forward until black line
+    if (enc - enc1 >= cm_to_encoders(10.0) && !flag) {  //if traveled more than or 22cm (lost the line)
+      enc_turn(-90 * sign, 60);                       //turn again to find the line
       flag = true;                                     //ensures that it only does this pnce
     }
-    setMultipleMotors(70, 70);
+    setMultipleMotors(50, 50);
     qtr.read(bw_vals);
   }
-  forwardCm(15.0, 70);
-  enc_turn(90 * sign, 100);
+  forwardCm(15.0, 50);
+  enc_turn(90 * sign, 60);
 }
 /*void avoid(int sign){
   float botLength = 15.5;
@@ -123,15 +126,27 @@ float getDistance() {
     return d;
   }
 }
-  void obstacle() {  //main obstacle function
-    if (seeObs(5.0)) {
-      enc_turn(90, 100);
-      if (seeObs(10.0)) {  //sees wall
-        enc_turn(180, 100);
-        avoid(-1);
-      } else {
-        avoid(1);
-      }
-    }
-    setMultipleMotors(0, 0);
+float tofSetup() {
+  if (!lox.begin()) {
+    Serial.println(F("Failed to boot VL53L0X"));
+    while (1)
+      ;
   }
+}
+float getBackDistance() {
+   VL53L0X_RangingMeasurementData_t measure;
+  lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
+  return measure.RangeMilliMeter/10.0;  
+}
+void obstacle() {  //main obstacle function
+  if (seeObs(8.0)) {
+    enc_turn(90, 70);
+    if (seeObs(10.0)) {  //sees wall
+      enc_turn(180, 70);
+      avoid(-1);
+    } else {
+      avoid(1);
+    }
+  }
+  setMultipleMotors(0, 0);
+}
