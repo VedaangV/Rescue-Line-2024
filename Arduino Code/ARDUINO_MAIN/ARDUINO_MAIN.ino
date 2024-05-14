@@ -8,20 +8,24 @@ Servo arm;
 Servo cam;
 bool armDown = 0;
 bool evac = false;
+int leftSpeed = 30;
+int rightSpeed = 30;
 void setup() {
   // put your setup code here, to run once:
   // put your setup code here, to run once:
-
   Serial2.begin(9600);
   Serial.begin(115200);
+  Serial.println("E");
   Wire.begin();
   tofSetup();
+  Serial.println("TOF");
   attachInterrupt(digitalPinToInterrupt(18), Interruptfunc, RISING);
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
   setup_qtr();
   //write("init");
   bnoSetup();
+  Serial.println("BNO");
   if (!color.begin()) {
     Serial.println("color failed");
     for (;;)
@@ -30,7 +34,7 @@ void setup() {
   color.enableColor(true);
   arm.attach(A6);
   cam.attach(A9);
-  Serial.println("Cleared setup");
+  Serial.println("Cleared setup!!");
   arm.write(45);
   delay(100);
   cam.write(120);
@@ -123,24 +127,22 @@ void loop() {
     setMultipleMotors(0, 0);
     delay(3000);
   } else if (msg[0] == 'a') {
-    setMultipleMotors(50, -50);
-    delay(40);
-    setMultipleMotors(0, 0);
-    delay(40);
+    leftSpeed += 1;
+    rightSpeed -= 1;
+    setMultipleMotors(leftSpeed, rightSpeed);
   } else if (msg[0] == 'b') {
-    setMultipleMotors(-50, 50);
-    delay(40);
-    setMultipleMotors(0, 0);
-    delay(40);
+    leftSpeed -= 1;
+    rightSpeed += 1;
+    setMultipleMotors(leftSpeed, rightSpeed);
+
   } else if (msg[0] == 'V') {
-    while (getFrontDistance() > 8.0) {
-      setMultipleMotors(50, 50);
-    }
-    collectVictim();
-    write("u");
+    setMultipleMotors(leftSpeed, rightSpeed);
   } else if (msg[0] == 'p') {
     deliverVictim();
     write("i");
+  } else if (msg[0] == 'H') {
+    forwardCm(5, 50);
+    collectVictim();
   }
 
 
@@ -155,6 +157,4 @@ void loop() {
   //enc_turn_abs(-90, 90);
   //
   x++;
-  
-  
 }

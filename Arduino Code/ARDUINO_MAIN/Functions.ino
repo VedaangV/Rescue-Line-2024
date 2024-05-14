@@ -297,7 +297,7 @@ int getnum(char *p) {
   return sum;
 }
 void collectVictim() {
-  enc_turn(120, 90);
+  enc_turn(120, 60);
   while (getBackDistance() > 20.0) {
     setMultipleMotors(55, -55);
   }
