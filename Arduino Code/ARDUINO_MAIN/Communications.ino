@@ -1,5 +1,5 @@
 #include "Header.h"
-#define MSG_LENGTH 50
+#define MSG_LENGTH 500
 char msg[MSG_LENGTH];
 
 void read(){
@@ -12,6 +12,7 @@ void read(){
     i++;
     delay(5);
   }
+  //Serial.println(msg);
 }
 void write(char message[]){
   for(int i = 0; i < strlen(message); i++){

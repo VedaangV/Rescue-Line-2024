@@ -297,12 +297,13 @@ int getnum(char *p) {
   return sum;
 }
 void collectVictim() {
+  forwardCm(3, 60);
   enc_turn(120, 60);
   while (getBackDistance() > 20.0) {
     setMultipleMotors(55, -55);
   }
   while(getBackDistance() > 13.0){
-    setMultipleMotors(-40, -40);
+    setMultipleMotors(-30, -30);
   }
   setMultipleMotors(0, 0);
   arm.write(100);
@@ -338,7 +339,7 @@ void deliverVictim() {
   arm.write(0);
   delay(1000);
   backwardCm(5, 80);
-  cam.write(100);
+  cam.write(85);
   write("i");
   read();
 }

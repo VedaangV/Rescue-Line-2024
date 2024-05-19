@@ -12,10 +12,10 @@ int rightSensor = 7;
 /*const float kp = 0.038;     //error multiplier
 const float ki = 0.00001;  //integral multiplier
 const float kd = 0.01;      //kd multiplier*/
-const float kp = 0.015;
+const float kp = 0.019;
 const float ki = 0.0;
 const float kd = 0.0;
-
+float error = 0.0;
 
 
 
@@ -24,8 +24,8 @@ QTRSensors qtr;
 
 void setup_qtr() {
   //setup for the qtr sensor
-  const uint8_t qtr_pins[] = {23, 25, 27, 30, 28, 26, 24, 22};
-
+  const uint8_t qtr_pins[] = {23, 25, 27, 30, 28, 26, 24, 22}; // main bot
+  //const uint8_t qtr_pins[] = {22, 24, 26, 28, 30, 27, 25, 23}; //if order is revered on the backup bot
   qtr.setTypeRC();
   //qtr.setEmitterPin(2);
   qtr.resetCalibration();
@@ -98,7 +98,7 @@ void diff_print() {  //print the diff between sensor pairs.
 void lineTrace(bool tCase) {  //main line tracking function
   int base_speed = 30;
   // gap();
-  float error = error_calc();                                              //calculating error
+  error = error_calc();                                              //calculating error
   integral += error;                                                       //summing up all erors during runtime
   derivative = error - last_error;                                         //checking the change in the errors over time.
   float adjustSpeed = (error * kp) + (integral * ki) + (derivative * kd);  //final number that calculates how much to adjust the motors.

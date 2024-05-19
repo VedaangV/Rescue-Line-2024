@@ -45,7 +45,7 @@ float getFrontDistance()  //get distance of Front US
 }
 
 bool seeObs(long dist) {  //sees obstacle?
-  if (getFrontDistance() <= dist) {
+  if (getFrontDistance() <= dist && getFrontDistance() <= dist) {
     return true;
   } else {
     return false;
@@ -59,16 +59,19 @@ void avoid(int sign) {  //move around obstacle
   enc_turn(-90 * sign, 60);
   int enc1 = enc;
   qtr.read(bw_vals);
-  while (numOfBlack() < 2) {      //forward until black line
-    if (enc - enc1 >= cm_to_encoders(10.0) && !flag) {  //if traveled more than or 22cm (lost the line)
+  while (numOfBlack() < 2 && !flag) {      //forward until black line
+    if (enc - enc1 >= cm_to_encoders(17.0) && !flag) {  //if traveled more than or 22cm (lost the line)
       enc_turn(-90 * sign, 60);                       //turn again to find the line
       flag = true;                                     //ensures that it only does this pnce
     }
     setMultipleMotors(50, 50);
     qtr.read(bw_vals);
   }
-  forwardCm(15.0, 50);
+  forwardCm(7.0, 50);
   enc_turn(90 * sign, 60);
+  backwardCm(4, 50);
+  setMultipleMotors(0, 0);
+  delay(1000);
 }
 /*void avoid(int sign){
   float botLength = 15.5;
@@ -149,4 +152,5 @@ void obstacle() {  //main obstacle function
     }
   }
   setMultipleMotors(0, 0);
+  error = 0.0;
 }

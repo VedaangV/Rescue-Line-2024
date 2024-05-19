@@ -9,12 +9,12 @@
 #include <Wire.h>
 #include <Adafruit_BNO055.h>
 #include <QTRSensors.h>//for qtr
-
+#include <Servo.h>
 //--------------------------
 
 //Global defs--------------------------:
 
-#define MSG_LENGTH 50
+#define MSG_LENGTH 500
 
 //---------------------
 
@@ -47,12 +47,15 @@ extern QTRSensors qtr;
 //Obstacle
 extern int trig;
 extern int echo;
+extern float error;
 
 
 //-------------------------
 
 //Functions from all files-----------------------------:
-
+//main
+extern Servo arm;
+extern Servo cam;
 //Comms
 void read();
 void write(char message[]);
