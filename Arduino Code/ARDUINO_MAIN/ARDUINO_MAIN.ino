@@ -1,7 +1,6 @@
 #include <Adafruit_BNO055.h>
 #include "Adafruit_APDS9960.h"
 #include "Header.h"
-#include <Servo.h>
 Adafruit_APDS9960 color;
 int x = 0;
 Servo arm;
